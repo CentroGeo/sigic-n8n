@@ -46,6 +46,8 @@ N8N_DB_PASSWORD=n8npassword
 # N8N – QUEUE / REDIS
 # =====================
 N8N_EXECUTIONS_MODE=queue
+EXECUTIONS_PROCESS=main
+N8N_WORKER=true
 N8N_REDIS_HOST=redis
 N8N_REDIS_PORT=6379
 
