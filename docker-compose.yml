@@ -35,10 +35,12 @@ services:
       - redis_data:/data
 
   python-runner:
-    image: python:3.14-slim
+    image: n8nio/n8n-python-runner:latest
     restart: unless-stopped
-    command: >
-      sh -c "pip install n8n-python && n8n-python-runner"
+    environment:
+      N8N_PYTHON_RUNNER_PORT: 5678
+    expose:
+      - "5678"
 
   n8n:
     image: n8nio/n8n:latest
