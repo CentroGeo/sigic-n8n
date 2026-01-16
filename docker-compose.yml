@@ -34,14 +34,6 @@ services:
     volumes:
       - redis_data:/data
 
-  python-runner:
-    image: n8nio/n8n-python:latest
-    restart: unless-stopped
-    environment:
-      N8N_PYTHON_RUNNER_PORT: 5678
-    expose:
-      - "5678"
-
   n8n:
     image: n8nio/n8n:latest
     restart: unless-stopped
@@ -96,11 +88,6 @@ services:
       QUEUE_BULL_REDIS_DB: 1
       QUEUE_BULL_QUEUE_NAME: jobs
 
-      # Python Runner
-      N8N_PYTHON_RUNNER_ENABLED: "true"
-      N8N_PYTHON_RUNNER_HOST: python-runner
-      N8N_PYTHON_RUNNER_PORT: 5678
-
     depends_on:
       - postgres
       - redis
@@ -140,11 +127,6 @@ services:
       DB_POSTGRESDB_DATABASE: ${N8N_DB_NAME}
       DB_POSTGRESDB_USER: ${N8N_DB_USER}
       DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
-
-      # Python Runner
-      N8N_PYTHON_RUNNER_ENABLED: "true"
-      N8N_PYTHON_RUNNER_HOST: python-runner
-      N8N_PYTHON_RUNNER_PORT: 5678
 
     depends_on:
       - postgres
