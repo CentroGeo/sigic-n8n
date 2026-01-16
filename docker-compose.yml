@@ -39,6 +39,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${TZ}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
 
       # HTTP / Public
       N8N_HOST: ${N8N_HOST}
@@ -105,6 +106,7 @@ services:
 
     environment:
       TZ: ${TZ}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
 
       N8N_DISABLE_UI: "true"
 
