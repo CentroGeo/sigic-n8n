@@ -185,9 +185,6 @@ volumes:
   n8n_data:
   traefik_letsencrypt:
 
-
 networks:
   sigicnetwork:
-    driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: "1360"
+    external: true

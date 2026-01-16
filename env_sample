@@ -65,3 +65,5 @@ POSTGRES_PASSWORD=n8npassword
 # N8N – RUNNERS (external)
 # =====================
 N8N_RUNNERS_AUTH_TOKEN=<<shared-secret>>
+
+

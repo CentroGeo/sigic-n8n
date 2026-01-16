@@ -1,0 +1,11 @@
+docker network create \
+  --driver bridge \
+  --opt com.docker.network.driver.mtu=1360 \
+  sigicnetwork
+
+
+networks:
+  sigicnetwork:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1360"

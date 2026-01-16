@@ -16,6 +16,4 @@ services:
 
 networks:
   sigicnetwork:
-    driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: "1360"
+    external: true
