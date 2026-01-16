@@ -79,7 +79,7 @@ services:
       DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
 
       # Queue / Redis
-      OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "true"
+      OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "false"
       EXECUTIONS_MODE: queue
       N8N_WORKER: "false"
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
