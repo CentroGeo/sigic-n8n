@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:latest
+    container_name: ollama-gemini-proxy
+    env_file:
+      - .env
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    command: >
+      litellm
+      --config /app/config.yaml
+      --ollama-compatible
+      --port ${LITELLM_PORT}
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
