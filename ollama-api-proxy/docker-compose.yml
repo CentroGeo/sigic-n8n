@@ -4,10 +4,8 @@ services:
     build: .
     env_file:
       - .env
-    environment:
-      MODELS_CONFIG: /app/models.json
     volumes:
-      - ./models.json:/app/models.json:ro
+      - ./models.json:/application/models.json:ro
     ports:
       - "11434:11434"
     restart: unless-stopped
