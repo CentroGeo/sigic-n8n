@@ -81,6 +81,7 @@ services:
       # Queue / Redis
       OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "true"
       EXECUTIONS_MODE: queue
+      N8N_WORKER: "false"
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
       QUEUE_BULL_REDIS_PORT: ${N8N_REDIS_PORT:-6379}
       QUEUE_BULL_REDIS_DB: 0
@@ -104,10 +105,6 @@ services:
 
       EXECUTIONS_MODE: queue
       N8N_WORKER: "true"
-
-      N8N_PROTOCOL: ${N8N_PROTOCOL}
-      N8N_TRUST_PROXY: ${N8N_TRUST_PROXY}
-      N8N_PROXY_HOPS: 1
 
       # Redis
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
