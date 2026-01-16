@@ -1,10 +1,12 @@
 
 services:
   ollama-proxy:
-    build: .
+    image: ollama-proxy:local
+    build:
+      context: .
+    container_name: ollama-proxy
     env_file:
       - .env
     ports:
       - "11434:11434"
     restart: unless-stopped
-
