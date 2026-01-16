@@ -17,6 +17,8 @@ services:
       - traefik_letsencrypt:/letsencrypt
     labels:
       - "traefik.enable=true"
+    networks:
+      - sigicnetwork
 
   postgres:
     image: postgres:16
@@ -27,12 +29,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sigicnetwork
 
   redis:
     image: redis:7-alpine
     restart: unless-stopped
     volumes:
       - redis_data:/data
+    networks:
+      - sigicnetwork
 
   n8n:
     image: n8nio/n8n:latest
@@ -106,6 +112,8 @@ services:
       - "traefik.http.routers.n8n.entrypoints=websecure"
       - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+    networks:
+      - sigicnetwork
 
   n8n-worker:
     image: n8nio/n8n:latest
@@ -148,6 +156,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - sigicnetwork
 
   task-runners-worker:
     image: n8nio/runners:2.3.5
@@ -156,6 +166,8 @@ services:
       N8N_RUNNERS_TASK_BROKER_URI: http://n8n-worker:5679
     depends_on:
       - n8n-worker
+    networks:
+      - sigicnetwork
 
   task-runners:
     image: n8nio/runners:2.3.5
@@ -164,9 +176,18 @@ services:
       N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
     depends_on:
       - n8n
+    networks:
+      - sigicnetwork
 
 volumes:
   postgres_data:
   redis_data:
   n8n_data:
   traefik_letsencrypt:
+
+
+networks:
+  sigicnetwork:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1360"
