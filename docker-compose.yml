@@ -84,7 +84,8 @@ services:
       N8N_WORKER: "false"
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
       QUEUE_BULL_REDIS_PORT: ${N8N_REDIS_PORT:-6379}
-      QUEUE_BULL_REDIS_DB: 0
+      QUEUE_BULL_REDIS_DB: 1
+      QUEUE_BULL_QUEUE_NAME: jobs
     depends_on:
       - postgres
       - redis
@@ -103,13 +104,16 @@ services:
     environment:
       TZ: ${TZ}
 
+      N8N_DISABLE_UI: "true"
+
       EXECUTIONS_MODE: queue
       N8N_WORKER: "true"
 
       # Redis
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
       QUEUE_BULL_REDIS_PORT: ${N8N_REDIS_PORT:-6379}
-      QUEUE_BULL_REDIS_DB: 0
+      QUEUE_BULL_REDIS_DB: 1
+      QUEUE_BULL_QUEUE_NAME: jobs
 
       # Database (IGUAL que el main)
       DB_TYPE: ${N8N_DB_TYPE}
