@@ -11,7 +11,7 @@ services:
     command:
       - "--config"
       - "/app/config.yaml"
-      - "--ollama-compatible"
+      - "--ollama"
       - "--port"
       - "11434"
     ports:
