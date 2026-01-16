@@ -7,11 +7,14 @@ services:
       - .env
     volumes:
       - ./config.yaml:/app/config.yaml:ro
-    command: >
-      litellm
-      --config /app/config.yaml
-      --ollama-compatible
-      --port ${LITELLM_PORT}
+    entrypoint: ["litellm"]
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--ollama-compatible"
+      - "--port"
+      - "11434"
     ports:
       - "11434:11434"
     restart: unless-stopped
+
