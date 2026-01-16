@@ -101,6 +101,8 @@ services:
   n8n-worker:
     image: n8nio/n8n:latest
     restart: unless-stopped
+    command: worker
+
     environment:
       TZ: ${TZ}
 
