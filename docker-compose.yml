@@ -102,6 +102,7 @@ services:
 
       EXECUTIONS_MODE: queue
       N8N_WORKER: "true"
+      N8N_TRUST_PROXY: ${N8N_TRUST_PROXY}
 
       # Redis
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
