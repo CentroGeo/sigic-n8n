@@ -123,9 +123,6 @@ services:
       - postgres
       - redis
 
-    volumes:
-      - n8n_data:/home/node/.n8n
-
 volumes:
   postgres_data:
   redis_data:
