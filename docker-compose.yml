@@ -88,6 +88,12 @@ services:
       QUEUE_BULL_REDIS_DB: 1
       QUEUE_BULL_QUEUE_NAME: jobs
 
+      # Runners
+      N8N_RUNNERS_ENABLED: ${N8N_RUNNERS_ENABLED}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+
     depends_on:
       - postgres
       - redis
@@ -127,11 +133,6 @@ services:
       DB_POSTGRESDB_DATABASE: ${N8N_DB_NAME}
       DB_POSTGRESDB_USER: ${N8N_DB_USER}
       DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
-
-      N8N_RUNNERS_ENABLED: ${N8N_RUNNERS_ENABLED}
-      N8N_RUNNERS_MODE: external
-      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
-      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
 
     depends_on:
       - postgres
