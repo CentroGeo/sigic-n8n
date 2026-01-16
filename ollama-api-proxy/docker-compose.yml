@@ -1,0 +1,13 @@
+
+services:
+  proxy:
+    image: ghcr.io/xrip/ollama-api-proxy:latest
+    env_file:
+      - .env
+    volumes:
+      - ./models.json:/app/models.json:ro
+    environment:
+      MODELS_CONFIG: /app/models.json
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
