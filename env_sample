@@ -1,4 +1,7 @@
 TZ=America/Mexico_City
+N8N_ENCRYPTION_KEY=superencryptionkey1234567890
+# openssl rand -hex 32
+
 
 # =====================
 # N8N – PUBLIC / HTTP
