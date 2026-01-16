@@ -1,6 +1,6 @@
 
 services:
-  proxy:
+  ollama-proxy:
     build: .
     env_file:
       - .env
