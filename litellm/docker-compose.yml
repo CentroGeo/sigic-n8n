@@ -1,7 +1,7 @@
 
 services:
   litellm:
-    image: ghcr.io/berriai/litellm:latest
+    image: ghcr.io/berriai/litellm:main
     platform: linux/amd64
     container_name: ollama-gemini-proxy
     env_file:
