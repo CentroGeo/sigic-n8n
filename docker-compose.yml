@@ -35,7 +35,7 @@ services:
       - redis_data:/data
 
   python-runner:
-    image: n8nio/n8n-python-runner:latest
+    image: n8nio/n8n-python:latest
     restart: unless-stopped
     environment:
       N8N_PYTHON_RUNNER_PORT: 5678
