@@ -1,0 +1,57 @@
+TZ=America/Mexico_City
+
+# =====================
+# N8N – PUBLIC / HTTP
+# =====================
+N8N_HOST=n8n.tudominio.com
+N8N_PROTOCOL=https
+N8N_WEBHOOK_URL=https://n8n.tudominio.com/
+
+N8N_BASIC_AUTH_ACTIVE=false
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=supersecreta
+
+N8N_SECURE_COOKIE=true
+N8N_TRUST_PROXY=true
+
+# =====================
+# N8N – AUTH OAUTH2 / OIDC
+# =====================
+N8N_AUTH_OAUTH2_ENABLED=true
+
+N8N_AUTH_OAUTH2_CLIENT_ID=n8n
+N8N_AUTH_OAUTH2_CLIENT_SECRET=super-secret
+
+N8N_AUTH_OAUTH2_AUTH_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/auth
+N8N_AUTH_OAUTH2_TOKEN_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/token
+N8N_AUTH_OAUTH2_USERINFO_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/userinfo
+
+N8N_AUTH_OAUTH2_SCOPE=openid email profile
+N8N_AUTH_OAUTH2_LOGIN_LABEL=Keycloak
+
+N8N_AUTH_OAUTH2_AUTO_CREATE_USER=true
+N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE=email
+
+# =====================
+# N8N – DATABASE
+# =====================
+N8N_DB_TYPE=postgresdb
+N8N_DB_HOST=postgres
+N8N_DB_PORT=5432
+N8N_DB_NAME=n8n
+N8N_DB_USER=n8n
+N8N_DB_PASSWORD=n8npassword
+
+# =====================
+# N8N – QUEUE / REDIS
+# =====================
+N8N_EXECUTIONS_MODE=queue
+N8N_REDIS_HOST=redis
+N8N_REDIS_PORT=6379
+
+# =====================
+# POSTGRES (infra)
+# =====================
+POSTGRES_DB=n8n
+POSTGRES_USER=n8n
+POSTGRES_PASSWORD=n8npassword

@@ -1,0 +1,99 @@
+version: "3.9"
+
+services:
+  traefik:
+    image: traefik:v3.0
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/acme.json:/letsencrypt/acme.json
+    labels:
+      - "traefik.enable=true"
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+
+      # HTTP / Public
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: ${N8N_PROTOCOL}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+
+      N8N_SECURE_COOKIE: ${N8N_SECURE_COOKIE}
+      N8N_TRUST_PROXY: ${N8N_TRUST_PROXY}
+
+      # OAuth2 / OIDC
+      N8N_AUTH_OAUTH2_ENABLED: ${N8N_AUTH_OAUTH2_ENABLED}
+
+      N8N_AUTH_OAUTH2_CLIENT_ID: ${N8N_AUTH_OAUTH2_CLIENT_ID}
+      N8N_AUTH_OAUTH2_CLIENT_SECRET: ${N8N_AUTH_OAUTH2_CLIENT_SECRET}
+
+      N8N_AUTH_OAUTH2_AUTH_URL: ${N8N_AUTH_OAUTH2_AUTH_URL}
+      N8N_AUTH_OAUTH2_TOKEN_URL: ${N8N_AUTH_OAUTH2_TOKEN_URL}
+      N8N_AUTH_OAUTH2_USERINFO_URL: ${N8N_AUTH_OAUTH2_USERINFO_URL}
+
+      N8N_AUTH_OAUTH2_SCOPE: ${N8N_AUTH_OAUTH2_SCOPE}
+      N8N_AUTH_OAUTH2_LOGIN_LABEL: ${N8N_AUTH_OAUTH2_LOGIN_LABEL}
+
+      N8N_AUTH_OAUTH2_AUTO_CREATE_USER: ${N8N_AUTH_OAUTH2_AUTO_CREATE_USER}
+      N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE: ${N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE}
+
+      # Database (n8n espera DB_*, tú traduces)
+      DB_TYPE: ${N8N_DB_TYPE}
+      DB_POSTGRESDB_HOST: ${N8N_DB_HOST}
+      DB_POSTGRESDB_PORT: ${N8N_DB_PORT}
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_NAME}
+      DB_POSTGRESDB_USER: ${N8N_DB_USER}
+      DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
+
+      # Queue / Redis
+      EXECUTIONS_MODE: ${N8N_EXECUTIONS_MODE}
+      QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST}
+      QUEUE_BULL_REDIS_PORT: ${N8N_REDIS_PORT}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - n8n_data:/home/node/.n8n
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.tudominio.com`)"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
