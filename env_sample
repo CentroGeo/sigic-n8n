@@ -61,7 +61,6 @@ POSTGRES_DB=n8n
 POSTGRES_USER=n8n
 POSTGRES_PASSWORD=n8npassword
 
-
 # =====================
 # N8N – RUNNERS (external)
 # =====================
