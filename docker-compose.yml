@@ -112,37 +112,47 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # ===== API protegida (JWT) =====
-      - "traefik.http.routers.n8n-api.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api`) && !PathPrefix(`/api/v1/docs`)"
+      # =====================================================
+      # API PROTEGIDA (JWT)
+      # =====================================================
+      - "traefik.http.routers.n8n-api.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.n8n-api.entrypoints=websecure"
       - "traefik.http.routers.n8n-api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-api.middlewares=jwt-auth@docker"
       - "traefik.http.routers.n8n-api.service=n8n"
-      - "traefik.http.routers.n8n-api.priority=10"
+      - "traefik.http.routers.n8n-api.priority=100"
 
-      # ===== Docs API (LIBRE) =====
-      - "traefik.http.routers.n8n-api-docs.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api/v1/docs`)"
+      # =====================================================
+      # API DOCS (PUBLICO)
+      # =====================================================
+      - "traefik.http.routers.n8n-api-docs.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api/v1/docs/`)"
       - "traefik.http.routers.n8n-api-docs.entrypoints=websecure"
       - "traefik.http.routers.n8n-api-docs.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-api-docs.service=n8n"
-      - "traefik.http.routers.n8n-api-docs.priority=10"
+      - "traefik.http.routers.n8n-api-docs.priority=200"
 
-      # ===== Webhooks protegidos (JWT) =====
-      - "traefik.http.routers.n8n-webhook.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`)"
+      # =====================================================
+      # WEBHOOKS PROTEGIDOS (JWT)
+      # =====================================================
+      - "traefik.http.routers.n8n-webhook.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook/`)"
       - "traefik.http.routers.n8n-webhook.entrypoints=websecure"
       - "traefik.http.routers.n8n-webhook.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-webhook.middlewares=jwt-auth@docker"
       - "traefik.http.routers.n8n-webhook.service=n8n"
-      - "traefik.http.routers.n8n-webhook.priority=10"
+      - "traefik.http.routers.n8n-webhook.priority=100"
 
-      # ===== Router UI (PUBLICO / NORMAL) =====
-      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/api`) && !PathPrefix(`/webhook`)"
+      # =====================================================
+      # UI PUBLICA (SIN JWT)
+      # =====================================================
+      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/api/`) && !PathPrefix(`/webhook/`)"
       - "traefik.http.routers.n8n-ui.entrypoints=websecure"
       - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-ui.service=n8n"
       - "traefik.http.routers.n8n-ui.priority=1"
 
-      # ===== Service =====
+      # =====================================================
+      # SERVICE
+      # =====================================================
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
 
     networks:
