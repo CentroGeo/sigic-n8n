@@ -135,6 +135,11 @@ services:
       - "traefik.http.routers.n8n-webhook.middlewares=jwt-auth@docker"
       - "traefik.http.routers.n8n-webhook.service=n8n"
 
+      # ===== Router UI (PUBLICO / NORMAL) =====
+      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`)"
+      - "traefik.http.routers.n8n-ui.entrypoints=websecure"
+      - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n-ui.service=n8n"
 
       # ===== Service =====
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
