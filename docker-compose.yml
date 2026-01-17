@@ -33,10 +33,10 @@ services:
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
 
       # 🔐 JWT bearer validation
+      - --skip-jwt-bearer-tokens=false
       - --pass-authorization-header=true
       - --set-authorization-header=false
       - --pass-access-token=false
-      - --skip-auth-preflight=true
 
       # 🚫 sin cookies / sesiones
       - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
