@@ -31,27 +31,26 @@ services:
       - --oidc-issuer-url=${KEYCLOAK_ISSUER_URL}
       - --client-id=${OAUTH2_PROXY_CLIENT_ID}
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
-      - --redirect-url=${OAUTH2_PROXY_REDIRECT_URL}
-      - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
       - --email-domain=*
       - --http-address=0.0.0.0:4180
-      - --cookie-secure=true
-      - --cookie-samesite=lax
-      - --skip-provider-button=true
       - --set-authorization-header=false
       - --pass-authorization-header=false
+      # 🔐 JWT only
+      - --skip-jwt-bearer-tokens=true
+      - --pass-authorization-header=true
+      - --set-authorization-header=false
       - --pass-access-token=false
-      - --reverse-proxy=true
-      - --upstream=http://n8n:5678/
+      # 🚫 sin cookies / sin sesiones
+      - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
+      - --cookie-expire=0s
+      - --cookie-refresh=0s
+
+      # 🧠 modo auth_request
+      - --http-address=0.0.0.0:4180
+      - --email-domain=*
 
     labels:
       - "traefik.enable=true"
-
-      # Router
-      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/webhook`) && !PathPrefix(`/oauth2`)"
-      - "traefik.http.routers.n8n-ui.entrypoints=websecure"
-      - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.n8n-ui.service=oauth2"
 
       # ===== Router OAuth2 (login, callback, auth) =====
       - "traefik.http.routers.oauth2.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/oauth2`)"
@@ -59,13 +58,12 @@ services:
       - "traefik.http.routers.oauth2.tls.certresolver=letsencrypt"
       - "traefik.http.routers.oauth2.service=oauth2"
 
+      - "traefik.http.middlewares.jwt-auth.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth"
+      - "traefik.http.middlewares.jwt-auth.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.jwt-auth.forwardauth.authResponseHeaders=Authorization"
+
       # Service
       - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
-
-      # Middleware
-      - "traefik.http.middlewares.oauth2-proxy.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth?rd=https://n8n.cesarbenjamin.net/oauth2/start"
-      - "traefik.http.middlewares.oauth2-proxy.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.oauth2-proxy.forwardauth.authResponseHeaders=X-Auth-Request-User,X-Auth-Request-Email"
 
     networks:
       - sigicnetwork
@@ -105,9 +103,6 @@ services:
       N8N_TRUST_PROXY: ${N8N_TRUST_PROXY}
       N8N_PROXY_HOPS: 1
 
-      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE}
-      N8N_AUTH_DISABLED: ${N8N_AUTH_DISABLED}
-
       # Database (n8n espera DB_*, tú traduces)
       DB_TYPE: ${N8N_DB_TYPE}
       DB_POSTGRESDB_HOST: ${N8N_DB_HOST}
@@ -140,17 +135,26 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # ===== Router UI (PROTEGIDO) =====
-      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/webhook`) && !PathPrefix(`/oauth2`)"
-      - "traefik.http.routers.n8n-ui.entrypoints=websecure"
-      - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.n8n-ui.service=oauth2"
+      # ===== API protegida (JWT) =====
+      - "traefik.http.routers.n8n-api.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api`) && !PathPrefix(`/api/v1/docs`)"
+      - "traefik.http.routers.n8n-api.entrypoints=websecure"
+      - "traefik.http.routers.n8n-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n-api.middlewares=jwt-auth@docker"
+      - "traefik.http.routers.n8n-api.service=n8n"
 
-      # ===== Router Webhooks (LIBRE) =====
+      # ===== Docs API (LIBRE) =====
+      - "traefik.http.routers.n8n-api-docs.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/api/v1/docs`)"
+      - "traefik.http.routers.n8n-api-docs.entrypoints=websecure"
+      - "traefik.http.routers.n8n-api-docs.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n-api-docs.service=n8n"
+
+      # ===== Webhooks protegidos (JWT) =====
       - "traefik.http.routers.n8n-webhook.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`)"
       - "traefik.http.routers.n8n-webhook.entrypoints=websecure"
       - "traefik.http.routers.n8n-webhook.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n-webhook.middlewares=jwt-auth@docker"
       - "traefik.http.routers.n8n-webhook.service=n8n"
+
 
       # ===== Service =====
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
