@@ -68,26 +68,6 @@ services:
     networks:
       - sigicnetwork
 
-  postgres:
-    image: postgres:16
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - sigicnetwork
-
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    networks:
-      - sigicnetwork
-
   n8n:
     image: n8nio/n8n:latest
     restart: unless-stopped
@@ -223,6 +203,26 @@ services:
       N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
     depends_on:
       - n8n
+    networks:
+      - sigicnetwork
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - sigicnetwork
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - sigicnetwork
 
