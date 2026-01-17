@@ -9,3 +9,8 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.driver.mtu: "1360"
+
+
+openssl rand -hex 32
+openssl rand -base64 32 | head -c 32
+

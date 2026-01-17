@@ -41,6 +41,11 @@ services:
       - --set-authorization-header=false
       - --pass-authorization-header=false
       - --pass-access-token=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.oauth2.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/oauth2`)"
+      - "traefik.http.routers.oauth2.entrypoints=websecure"
+      - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
     networks:
       - sigicnetwork
 
