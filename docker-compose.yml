@@ -31,6 +31,7 @@ services:
       - --oidc-issuer-url=${KEYCLOAK_ISSUER_URL}
       - --client-id=${OAUTH2_PROXY_CLIENT_ID}
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
+      - --email-domain=*
 
       # 🔐 JWT bearer validation
       - --skip-jwt-bearer-tokens=false
