@@ -56,6 +56,12 @@ services:
       - "traefik.http.middlewares.oauth2-proxy.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.oauth2-proxy.forwardauth.authResponseHeaders=X-Auth-Request-User,X-Auth-Request-Email"
 
+      # ===== Middleware de errores (redirige 401 a login) =====
+      - "traefik.http.middlewares.oauth2-errors.errors.status=401"
+      - "traefik.http.middlewares.oauth2-errors.errors.service=oauth2@docker"
+      - "traefik.http.middlewares.oauth2-errors.errors.query=/oauth2/start"
+
+
     networks:
       - sigicnetwork
 
