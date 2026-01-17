@@ -140,7 +140,7 @@ services:
       - "traefik.http.routers.n8n-ui.service=oauth2"
 
       # ===== Router Webhooks (LIBRE) =====
-      - "traefik.http.routers.n8n-webhook.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`) && PathPrefix(`/oauth2`)"
+      - "traefik.http.routers.n8n-webhook.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`)"
       - "traefik.http.routers.n8n-webhook.entrypoints=websecure"
       - "traefik.http.routers.n8n-webhook.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-webhook.service=n8n"
