@@ -132,7 +132,7 @@ services:
       - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/webhook`) && !PathPrefix(`/oauth2`)"
       - "traefik.http.routers.n8n-ui.entrypoints=websecure"
       - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.n8n-ui.middlewares=oauth2-proxy@docker"
+      - "traefik.http.routers.n8n-ui.middlewares=oauth2-proxy@docker,oauth2-errors@docker"
       - "traefik.http.routers.n8n-ui.service=n8n"
 
       # ===== Router Webhooks (LIBRE) =====
