@@ -43,7 +43,6 @@ services:
       - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
       - --cookie-expire=0s
       - --cookie-refresh=0s
-      - --session-store-type=memory
 
       # 🚨 CLAVE: negar TODO por defecto
       - --skip-auth-route=^/oauth2
