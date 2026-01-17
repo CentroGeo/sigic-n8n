@@ -41,6 +41,7 @@ services:
       - --set-authorization-header=false
       - --pass-authorization-header=false
       - --pass-access-token=false
+      - --reverse-proxy=true
     labels:
       - "traefik.enable=true"
 
