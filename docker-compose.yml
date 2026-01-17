@@ -20,6 +20,30 @@ services:
     networks:
       - sigicnetwork
 
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    container_name: oauth2-proxy
+    restart: unless-stopped
+    env_file:
+      - .env
+    command:
+      - --provider=oidc
+      - --oidc-issuer-url=${KEYCLOAK_ISSUER_URL}
+      - --client-id=${OAUTH2_PROXY_CLIENT_ID}
+      - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
+      - --redirect-url=${OAUTH2_PROXY_REDIRECT_URL}
+      - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
+      - --email-domain=*
+      - --http-address=0.0.0.0:4180
+      - --cookie-secure=true
+      - --cookie-samesite=lax
+      - --skip-provider-button=true
+      - --set-authorization-header=false
+      - --pass-authorization-header=false
+      - --pass-access-token=false
+    networks:
+      - sigicnetwork
+
   postgres:
     image: postgres:16
     restart: unless-stopped
@@ -56,26 +80,6 @@ services:
       N8N_PROXY_HOPS: 1
 
       N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE}
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
-
-
-
-      # OAuth2 / OIDC
-      N8N_AUTH_OAUTH2_ENABLED: ${N8N_AUTH_OAUTH2_ENABLED}
-
-      N8N_AUTH_OAUTH2_CLIENT_ID: ${N8N_AUTH_OAUTH2_CLIENT_ID}
-      N8N_AUTH_OAUTH2_CLIENT_SECRET: ${N8N_AUTH_OAUTH2_CLIENT_SECRET}
-
-      N8N_AUTH_OAUTH2_AUTH_URL: ${N8N_AUTH_OAUTH2_AUTH_URL}
-      N8N_AUTH_OAUTH2_TOKEN_URL: ${N8N_AUTH_OAUTH2_TOKEN_URL}
-      N8N_AUTH_OAUTH2_USERINFO_URL: ${N8N_AUTH_OAUTH2_USERINFO_URL}
-
-      N8N_AUTH_OAUTH2_SCOPE: ${N8N_AUTH_OAUTH2_SCOPE}
-      N8N_AUTH_OAUTH2_LOGIN_LABEL: ${N8N_AUTH_OAUTH2_LOGIN_LABEL}
-
-      N8N_AUTH_OAUTH2_AUTO_CREATE_USER: ${N8N_AUTH_OAUTH2_AUTO_CREATE_USER}
-      N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE: ${N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE}
 
       # Database (n8n espera DB_*, tú traduces)
       DB_TYPE: ${N8N_DB_TYPE}
@@ -107,11 +111,22 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.n8n.rule=Host(`n8n.cesarbenjamin.net`)"
-      - "traefik.http.routers.n8n.entrypoints=websecure"
-      - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
-      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - traefik.enable=true
+
+      # UI (protegida)
+      - traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/`)
+      - traefik.http.routers.n8n-ui.entrypoints=websecure
+      - traefik.http.routers.n8n-ui.middlewares=oauth2-proxy@file
+      - traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt
+      - traefik.http.routers.n8n-ui.service=n8n
+
+      # Webhooks (SIN auth)
+      - traefik.http.routers.n8n-webhooks.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`)
+      - traefik.http.routers.n8n-webhooks.entrypoints=websecure
+      - traefik.http.routers.n8n-webhooks.tls.certresolver=letsencrypt
+      - traefik.http.routers.n8n-webhooks.service=n8n
+
+      - traefik.http.services.n8n.loadbalancer.server.port=5678
     networks:
       - sigicnetwork
 

@@ -1,6 +1,7 @@
-# === Gemini ===
 GEMINI_API_KEY=AIzaSyxxxxxxxxxxxxxxxxxxxx
-
-# === LiteLLM ===
-OLLAMA_PROXY_PORT=11434
 OPENROUTER_API_KEY=sk-or-xxxxxxxxxxxxxxxx
+
+OLLAMA_PROXY_PORT=11434
+
+KEYCLOAK_BASE_URL=https://iam.dev.geoint.mx
+KEYCLOAK_REALM=sigic

@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    keycloak-jwt:
+      jwt:
+        jwksUrls:
+          - "${KEYCLOAK_BASE_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs"
+        issuer: "${KEYCLOAK_BASE_URL}/realms/${KEYCLOAK_REALM}"

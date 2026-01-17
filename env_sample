@@ -20,20 +20,18 @@ N8N_TRUST_PROXY=true
 # =====================
 # N8N – AUTH OAUTH2 / OIDC
 # =====================
-N8N_AUTH_OAUTH2_ENABLED=true
+# Keycloak
+KEYCLOAK_ISSUER_URL=https://iam.dev.geoint.mx/realms/sigic
 
-N8N_AUTH_OAUTH2_CLIENT_ID=n8n
-N8N_AUTH_OAUTH2_CLIENT_SECRET=super-secret
+# oauth2-proxy client (Keycloak)
+OAUTH2_PROXY_CLIENT_ID=n8n-ui
+OAUTH2_PROXY_CLIENT_SECRET=XXXXXXXX
 
-N8N_AUTH_OAUTH2_AUTH_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/auth
-N8N_AUTH_OAUTH2_TOKEN_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/token
-N8N_AUTH_OAUTH2_USERINFO_URL=https://keycloak.tudominio.com/realms/mi-realm/protocol/openid-connect/userinfo
+# Debe coincidir EXACTO con Keycloak
+OAUTH2_PROXY_REDIRECT_URL=https://n8n.cesarbenjamin.net/oauth2/callback
 
-N8N_AUTH_OAUTH2_SCOPE="openid email profile"
-N8N_AUTH_OAUTH2_LOGIN_LABEL=Keycloak
-
-N8N_AUTH_OAUTH2_AUTO_CREATE_USER=true
-N8N_AUTH_OAUTH2_EMAIL_ATTRIBUTE=email
+# 32 bytes base64
+OAUTH2_PROXY_COOKIE_SECRET=RANDOM_BASE64_32BYTES
 
 # =====================
 # N8N – DATABASE
