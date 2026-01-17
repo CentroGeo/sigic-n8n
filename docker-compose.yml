@@ -33,6 +33,7 @@ services:
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
 
       # 🔐 JWT bearer validation
+      - --require-authorization-header=true
       - --skip-jwt-bearer-tokens=false
       - --pass-authorization-header=true
       - --set-authorization-header=false
