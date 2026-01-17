@@ -140,6 +140,7 @@ services:
       - "traefik.http.routers.n8n-ui.entrypoints=websecure"
       - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-ui.service=n8n"
+      - "traefik.http.routers.n8n-ui.priority=1"
 
       # ===== Service =====
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
