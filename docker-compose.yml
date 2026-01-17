@@ -33,19 +33,24 @@ services:
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
 
       # 🔐 JWT bearer validation
-      - --require-authorization-header=true
       - --skip-jwt-bearer-tokens=false
       - --pass-authorization-header=true
       - --set-authorization-header=false
       - --pass-access-token=false
 
-      # 🚫 sin cookies / sesiones
+      # 🚫 SIN cookies / SIN sesiones
       - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
       - --cookie-expire=0s
       - --cookie-refresh=0s
+      - --session-store-type=memory
 
-      # auth_request mode
+      # 🚨 CLAVE: negar TODO por defecto
+      - --skip-auth-route=^/oauth2
+
+      # auth_request
       - --http-address=0.0.0.0:4180
+      - --reverse-proxy=true
+      - --force-json-errors=true
 
     labels:
       - "traefik.enable=true"
