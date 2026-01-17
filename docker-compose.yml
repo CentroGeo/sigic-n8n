@@ -53,6 +53,12 @@ services:
       - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-ui.service=oauth2"
 
+      # ===== Router OAuth2 (login, callback, auth) =====
+      - "traefik.http.routers.oauth2.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/oauth2`)"
+      - "traefik.http.routers.oauth2.entrypoints=websecure"
+      - "traefik.http.routers.oauth2.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.oauth2.service=oauth2"
+
       # Service
       - "traefik.http.services.oauth2.loadbalancer.server.port=4180"
 
