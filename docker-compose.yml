@@ -32,6 +32,9 @@ services:
       - --client-id=${OAUTH2_PROXY_CLIENT_ID}
       - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
       - --email-domain=*
+      - -oidc-extra-audience=sisdai-spa-dev
+      - --oidc-extra-audience=geonode-geoserver-dev
+      - --oidc-extra-audience=account
 
       # 🔐 JWT bearer validation
       - --skip-jwt-bearer-tokens=false
