@@ -48,7 +48,7 @@ services:
       - "traefik.enable=true"
 
       # Router UI
-      - "traefik.http.routers.oauth2.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/oauth2`)"
+      - "traefik.http.routers.n8n-ui.rule=Host(`n8n.cesarbenjamin.net`) && !PathPrefix(`/webhook`) && !PathPrefix(`/oauth2`)"
       - "traefik.http.routers.n8n-ui.entrypoints=websecure"
       - "traefik.http.routers.n8n-ui.tls.certresolver=letsencrypt"
       - "traefik.http.routers.n8n-ui.service=oauth2"
