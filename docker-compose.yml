@@ -28,32 +28,17 @@ services:
       - .env
     command:
       - --provider=oidc
-      - --oidc-issuer-url=${KEYCLOAK_ISSUER_URL}
-      - --client-id=${OAUTH2_PROXY_CLIENT_ID}
-      - --client-secret=${OAUTH2_PROXY_CLIENT_SECRET}
+      - --oidc-issuer-url=https://iam.dev.geoint.mx/realms/sigic
+      - --client-id=n8n-dev
       - --email-domain=*
-      - --oidc-extra-audience=sisdai-spa-dev
-      - --oidc-extra-audience=geonode-geoserver-dev
-      - --oidc-extra-audience=account
-
-      # 🔐 JWT bearer validation
-      - --skip-jwt-bearer-tokens=false
+      - --skip-jwt-bearer-tokens=true
       - --pass-authorization-header=true
       - --set-authorization-header=false
-      - --pass-access-token=false
-
-      # 🚫 SIN cookies / SIN sesiones
-      - --cookie-secret=${OAUTH2_PROXY_COOKIE_SECRET}
       - --cookie-expire=0s
       - --cookie-refresh=0s
-
-      # 🚨 CLAVE: negar TODO por defecto
-      - --skip-auth-route=^/oauth2
-
-      # auth_request
-      - --http-address=0.0.0.0:4180
       - --reverse-proxy=true
       - --force-json-errors=true
+      - --http-address=0.0.0.0:4180
 
     labels:
       - "traefik.enable=true"
