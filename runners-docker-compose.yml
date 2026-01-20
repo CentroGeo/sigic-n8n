@@ -84,12 +84,20 @@ services:
       DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
 
       # Queue / Redis
-      OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "true"
+      OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "false"
       EXECUTIONS_MODE: queue
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
       QUEUE_BULL_REDIS_PORT: ${N8N_REDIS_PORT:-6379}
       QUEUE_BULL_REDIS_DB: 1
       QUEUE_BULL_QUEUE_NAME: jobs
+
+      # Runners
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+
+      N8N_RUNNERS_BROKER_HOST: n8n
+      N8N_RUNNERS_BROKER_PORT: 5679
 
     depends_on:
       - postgres
@@ -143,9 +151,12 @@ services:
     environment:
       TZ: ${TZ}
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+
       N8N_DISABLE_UI: "true"
 
       EXECUTIONS_MODE: queue
+      N8N_WORKER: "true"
+      OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "true"
 
       # Redis
       QUEUE_BULL_REDIS_HOST: ${N8N_REDIS_HOST:-redis}
@@ -161,9 +172,38 @@ services:
       DB_POSTGRESDB_USER: ${N8N_DB_USER}
       DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
 
+      # Runners
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+
+      N8N_RUNNERS_BROKER_HOST: n8n
+      N8N_RUNNERS_BROKER_PORT: 5679
+
     depends_on:
       - postgres
       - redis
+    networks:
+      - sigicnetwork
+
+  task-runners-worker:
+    image: n8nio/runners:2.3.5
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: ws://n8n-worker:5679
+    depends_on:
+      - n8n-worker
+    networks:
+      - sigicnetwork
+
+  task-runners:
+    image: n8nio/runners:2.3.5
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: ws://n8n:5679
+    depends_on:
+      - n8n
     networks:
       - sigicnetwork
 
