@@ -67,6 +67,7 @@ services:
       TZ: ${TZ}
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
       N8N_RUNNERS_ENABLED: "false"
+      N8N_RUNNERS_MODE: "disabled"
 
       # HTTP / Public
       N8N_HOST: ${N8N_HOST}
