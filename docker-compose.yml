@@ -130,6 +130,14 @@ services:
       - "traefik.http.routers.n8n-ui.service=n8n"
       - "traefik.http.routers.n8n-ui.priority=1"
 
+      # ===== WEBHOOK OPTIONS (SIN AUTH) =====
+      - "traefik.http.routers.n8n-webhook-options.rule=Host(`n8n.cesarbenjamin.net`) && PathPrefix(`/webhook`) && Method(`OPTIONS`)"
+      - "traefik.http.routers.n8n-webhook-options.entrypoints=websecure"
+      - "traefik.http.routers.n8n-webhook-options.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.n8n-webhook-options.middlewares=n8n-cors@docker"
+      - "traefik.http.routers.n8n-webhook-options.service=n8n"
+      - "traefik.http.routers.n8n-webhook-options.priority=200"
+
       # ===== CORS PARA WEBHOOK CHAT =====
       - "traefik.http.middlewares.n8n-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS"
       - "traefik.http.middlewares.n8n-cors.headers.accesscontrolallowheaders=Authorization,Content-Type"
